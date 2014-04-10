@@ -11,7 +11,7 @@ The project is based on the Play Framework version 2.0.4 and uses the jdbc MySQL
 - Retrieval of recipes based on the fridge content and a list of potential items to buy
 - Retrieval of recipes by name
 - Addition of recipes (list of ingredients, description, name, picture)
-- Ranking of recipies (like / dislike buttons)
+- Ranking of recipes (like / dislike buttons)
 
 ### Development
 
