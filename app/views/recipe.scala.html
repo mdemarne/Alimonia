@@ -1,0 +1,106 @@
+@(user : User)(products : Seq[TempProduct])(recipes : Seq[Recipe])(addItemForm : Form[(String, String, String)], searchRecipeForm : Form[String])
+
+@main("Alimonia - Browse Recipes")(){
+
+    @navbar(2)
+    
+    <div class="grid grid-pad">
+    	
+    	<!-- Display list of ingredients we are including -->
+    	<div class="col-1-2">
+    	    <b>Search by Ingredients</b>
+
+    		<p>	    				
+	    		@helper.form(action = routes.Recipes.searchRecipesFromFridge) {
+	    			<input type="submit" value="Search with what is in your fridge">
+	    		}
+	    	</p>
+    		<p style="font-size:15px;">or see what you can cook if you buy more ingredients... <br>
+    		@helper.form(action = routes.Recipes.searchRecipes("no")) {
+    			<input type="submit" name="act" value="Search with the list below only">
+    		}
+    		@helper.form(action = routes.Recipes.searchRecipes("yes")) {
+    			<input type="submit" name="act" value="Search with the list and the fridge"></p>
+    		}
+	    	<div id = "recipe_ingredients">
+	    		
+	    		<div id = "labels">
+		    		<div class = "name">Item</div>	
+		    		<div class = "quantity">Quantity</div>
+	    		</div>
+	    		
+	    		<div id = "items">
+	    		@if(products != null){ 
+					@for(item <- products){
+	    			<div class = "item">
+		    			<div class = "name">@item.name</div>	
+		    			<div class = "quantity">@item.quantity @item.unities</div>
+		    			<a href="@routes.Recipes.removeProduct(item.id)"><img src="@routes.Assets.at("images/close_icon_gray_x.gif")"/></a>
+		    		</div>
+		    		}
+		    		}
+	    		</div>
+	    		
+	    		<div id = "recipe_forms">
+
+	    			<div id = "insert_item">
+	    			<p>
+	    				@helper.form(action = routes.Recipes.addProduct) {
+	    					<div class = "form_title">Add Item</div>
+	    						@helper.inputText(addItemForm("name"), '_label -> None, '_help -> "", 'placeholder -> "Item name", 'maxlength -> 40)
+	    						@helper.inputText(addItemForm("quantity"), '_label -> None, '_help -> "", 'placeholder -> "quantity", 'onkeypress -> "return doubleOnly(this, event);", 'maxlength -> 10)
+	    						@helper.select(field = addItemForm("units"), options = Seq("units"->"units", "ml"->"ml", "l"->"l", "g"->"g", "kg" -> "kg"), '_help -> "", '_label -> None)	    					
+	    					<p>
+	    						<input type="submit" value="Add Item">
+	    					</p>
+	    				}
+	    			</p>
+	    			<br><br>
+	    			</div>
+	    			
+	    			
+	    			
+	    				    			    			
+	    		</div>
+	    		
+	    	</div>
+    	
+    	</div>
+
+    	<!-- Display list of recipes -->
+    	<div class="col-1-2">
+    	<b>Search by Recipe Name</b>
+    	<div id ="searchrecipebyname">
+    	@helper.form(action = routes.Recipes.searchRecipesByName) {
+    		@helper.inputText(searchRecipeForm("name"), '_label -> None, '_help -> "", 'placeholder -> "recipe name", 'maxlength -> 50)
+    		<dl class =" ">
+    			<dt></dt>
+    			<dd>
+    			<input type="submit" value="Search">
+    			</dd>
+    		</dl>
+    		
+    	}
+    	</div>
+    	    <div id = "recipes">
+    	    @if(recipes != null) {
+    	    @for(recipe <- recipes) {
+	    	    <a href="@routes.Recipes.recipeDetail(recipe.id)"><div class = "recipe">
+	    	    	<img src="@routes.Recipes.recipeShot(recipe.id)" width="75" height="75">
+	    	    	<div class = "name">@recipe.name</div>
+	    	    	<div class = "likes">@recipe.getLikes people like this</div><br>
+	    	    	@if(user.isSubtractable(recipe)) {
+	    	    		<p>Ready to cook</p>
+	    	    	} else {
+	    	    		<p>Additional ingredients required</p>
+	    	    	}
+	    	    </div></a>
+	    	 }
+	    	 }
+	    	</div>
+	    
+	    </div>
+
+	    @footer()
+    </div>
+}

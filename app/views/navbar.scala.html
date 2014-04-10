@@ -1,0 +1,28 @@
+@(selected : Int)
+
+<div class="grid grid-pad">
+
+    <div class="col-1-1">
+    	<div class = "top">
+    		
+    		<div class = "brand">
+	  	  		Alimonia
+	  	  	</div>
+	  	  	
+	  	  	<div class = "tagline">
+	  	  	your fridge, your recipes
+	  	  	</div>
+	  	  	
+	  	  	<div class = "navigation">
+	  	  		<ul>
+	  	  			<li>@if(selected==1){ <b>}<a href = "/fridge">Your <br/>Fridge</a>@if(selected==1){ </b>}</li>
+	  	  			<li>@if(selected==2){ <b>}<a href = "/recipes">Search Recipes</a>@if(selected==2){ </b>}</li>
+	  	  			<li>@if(selected==3){ <b>}<a href = "/create">Create Recipes</a>@if(selected==3){ </b>}</li>
+	  	  			<li><a href = "/logout">Logout</a></li>
+	  	  		</ul>
+	  	  	</div>
+	  	  	
+	  	</div>
+    </div>
+    
+</div>

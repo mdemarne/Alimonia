@@ -1,0 +1,159 @@
+@(category : String, items : Seq[Product], searchFridgeForm : Form[(String)], addItemToFridgeForm : Form[(String, String, String)], editItemForm : Form[(Int,String, String)], addErrors : String = null, editErrors : String = null)
+
+@main("Alimonia - Your Fridge") {
+window.onload = function(){
+	/* Don't display darken layer initially */
+	document.getElementsByName("darkBackgroundLayer")[0].style.display = "none";
+	
+	/* Don't display the popup */
+	if(document.getElementById("popup") != null)
+		document.getElementById("popup").style.display = "none";
+	
+	if(document.getElementById("exit_edit_item") != null)
+		document.getElementById("exit_edit_item").addEventListener("click", exit_edit_item());
+		
+	/* Bind the editable item events if we are in the fridge */
+	if(document.getElementById("right_fridge") != null){	
+		if(document.getElementsByName("item") != null) {
+			console.log("There are items");
+			var items = document.getElementsByClassName("item");
+			for(var i = 0; i < items.length; i++){
+				console.log(items[i].name);
+				items[i].addEventListener("click", edit_item(items[i].id));
+			}
+		}
+	}
+};
+} {
+
+    @navbar(1)
+
+	<div class="darkenBackground" name="darkBackgroundLayer" id="darkBackgroundLayer">
+	</div>        
+    
+        <div class="popup" id = "popup" style="margin-top: 40px;">
+
+
+		    <!-- Displayed only if the user is logging in-->
+		    <div id = "edit_item">
+		    	<div class="subtitle">
+			    	<h3>Edit Item</h3>
+		        </div>
+		           <p class="general_error">@editErrors</p>
+	            @helper.form(action = routes.Fridges.editItem(category), 'id -> "edit_item_form") {
+	                @helper.inputText(editItemForm("name"), '_label -> None, '_help -> "", 'placeholder -> "new item name", 'id -> "edit_name")
+	                @helper.inputText(editItemForm("quantity"), '_label -> None, '_help -> "", 'placeholder -> "new quantity",  'onkeypress -> "return doubleOnly(this, event);", 'id -> "edit_quantity")					
+					<br/>
+					<br/>
+					<input type="submit" value="Modify">
+	            }
+		        
+		        <div class="title">
+			    	<h2>or</h2>
+		        </div>
+		        
+		    	@helper.form(action = routes.Fridges.removeItem(category), 'id -> "remove_item_form") {
+		    			<input type="submit" value="Delete">
+		    	}
+		        
+		        
+		        <div class="protips" style="-webkit-transition: all 0.2s ease-in-out;">
+		            <a href="#"></a>
+		            <a id="exit_edit_item" href="#" size="10">Cancel</a>
+		        </div>
+	        </div>
+	        
+        </div>      
+
+
+    <div class="grid grid-pad">
+    	
+    	<div class="col-1-3">
+    		<div id = "left_fridge" style="background-image = url(@routes.Assets.at("/images/open-refrigerator-half.jpeg"))">
+    	    	<img src="@routes.Assets.at("/images/open-refrigerator-half.jpeg")" width="328px" height="500px">
+    	           <dl class="list nigiri">
+	    	           <dt>Categories</dt>
+	    	           <dd @if(category=="" || category=="null" || category==null){ class="selected"}><a href="@routes.Fridges.fridge(null)">All</a></dd>
+	    	           <dd @if(category=="meats-poultry-seafood"){ class="selected"}><a href="@routes.Fridges.fridge("meats-poultry-seafood")">Meats, Poultry, Seafood</a></dd>
+	    	           <dd @if(category=="fruits-vegetables"){ class="selected"}><a href="@routes.Fridges.fridge("fruits-vegetables")">Fruits, Vegetables</a></dd>
+	    	           <dd @if(category=="dairy"){ class="selected"}><a href="@routes.Fridges.fridge("dairy")">Dairy</a></dd>
+	    	           <dd @if(category=="beverages"){ class="selected"}><a href="@routes.Fridges.fridge("beverages")">Beverages</a></dd>
+	    	           <dd @if(category=="condiments"){ class="selected"}><a href="@routes.Fridges.fridge("condiments")">Condiments</a></dd>
+	    	           <dd @if(category=="pasta-bread-grains"){ class="selected"}><a href="@routes.Fridges.fridge("pasta-bread-grains")">Pasta, Bread, Grains</a></dd>
+	    	           <dd @if(category=="cooking-baking"){ class="selected"}><a href="@routes.Fridges.fridge("cooking-baking")">Cooking, Baking</a></dd>
+	    	           <dd @if(category=="liquids"){ class="selected"}><a href="@routes.Fridges.fridge("liquids")">Liquids</a></dd>
+	    	           <dd @if(category=="spices"){ class="selected"}><a href="@routes.Fridges.fridge("spices")">Spices</a></dd>
+	    	      </dl>
+    		</div>
+    	</div>
+
+
+    	<div class="col-2-3">
+	    	<div id = "right_fridge">
+	    		    		<div id = "labels">
+		    		<div class = "name">Item</div>	
+		    		<div class = "quantity">Quantity</div>
+		    		<div class = "date">Date Added</div>
+	    		</div>
+	    		<div id = "items">
+	    		@for(item <- items) {	
+	    			<div class = "item" id="@item.id">
+		    			<div class = "name">@item.name</div>	
+		    			<div class = "quantity">@item.quantity @item.unities</div>
+		    			<div class = "date">@item.date</div>
+		    			<img src="@routes.Assets.at("/images/edit-icon.png")"/>
+		    		</div>
+		   	}
+	    		</div>
+	    		
+	    		<div id = "fridge_forms">
+
+	    			<div id = "insert_item">
+	    			@if(category != null && category != "" && category != "null") {
+	    				@helper.form(action = routes.Fridges.addItemToFridge(category)) {
+	    					<div class = "form_title">Add Item</div>
+	    					<p class="error">@addErrors</p>
+	    						@helper.inputText(addItemToFridgeForm("name"), '_label -> None, '_help -> "", 'placeholder -> "Item name", 'maxlength -> 40)
+	    						@helper.inputText(addItemToFridgeForm("quantity"), '_label -> None, '_help -> "", 'placeholder -> "quantity", 'onkeypress -> "return doubleOnly(this, event);", 'maxlength -> 10)
+	    						@helper.select(field = addItemToFridgeForm("units"), options = Seq("units"->"units", "ml"->"ml", "l"->"l", "g"->"g", "kg" -> "kg"), '_help -> "", '_label -> None)
+	    						<dl class=" ">	
+	    						<dt>
+	    							<label></label>
+	    						</dt>
+	    						<dd>			
+	    							<input type="submit" value="Add Item">
+	    						</dd>
+	    						</dl>
+	    				}
+	    				} else {
+	    					<p>Select a category to add an item !</p>
+	    				}
+	    			</div>
+	    			
+	    			<br/>
+	    			<br/>
+	    			<br/>
+	    					    		
+	    			<div id = "search_items">
+	    				@helper.form(action = routes.Fridges.searchFridge) {
+	    					<div class = "form_title">Search Fridge</div>
+    				    	@helper.inputText(searchFridgeForm("query"), '_label -> None, '_help -> "", 'placeholder -> "Item Name", 'maxlength -> 40)
+    				    	<dl class=" ">
+    				    		<dt>
+	    							<label></label>
+	    						</dt>
+	    					<dd>	
+	    			    	<input type="submit" value="Search">
+	    					</dd>
+    				    	</dl>
+	    			    }
+	    			</div>
+	    			
+	    		</div>
+	    		
+	    	</div>
+	    </div>
+
+	    @footer()
+    </div>
+}

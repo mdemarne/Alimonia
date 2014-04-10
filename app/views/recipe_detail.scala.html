@@ -1,0 +1,68 @@
+@(recipe : Recipe)(user : User)
+
+@main("Alimonia - Recipe Detail")() {
+
+    @navbar(0)
+
+    <div class="grid grid-pad">
+    	
+    	<!-- Display list of ingredients we are including -->
+    	<div class="col-1-2" style="padding-right:40px;">
+    		<div id = "recipe_general">
+    			<img src = "@routes.Recipes.recipeShot(recipe.id)">
+	    		<h1><div id ="name">@recipe.name</div></h1>
+	    		<div id = "author">by @if(!recipe.getAuthor.isEmpty) { 
+	    			@recipe.getAuthor.get.getFullName
+	    		} else {
+	    			@recipe.author
+	    		}</div>
+	    		<div id ="date">Created the @recipe.date</div>
+	    		<p>This recipe is for @recipe.nb person(s) </p>
+	    		<p>Likes : @recipe.getLikes <br>
+	    		Dislikes : @recipe.getDislikes <br>
+	    		Your like : @recipe.getLikeFromUser(user) </p>
+	    		@if(user.isSubtractable(recipe)) {
+	    			@helper.form(action = routes.Recipes.cook(recipe.id)) {
+		    			<button id="select_recipe" type="submit">Cook it !</button>
+	    			}
+	    		}
+	    		<br/>
+	    		@helper.form(action = routes.Recipes.like) {
+	    			<input type="hidden" value="@recipe.id" name="recipeId">
+	    			<input id="like_recipe" type="submit" value="like"></input>
+	    		}
+	    			@helper.form(action = routes.Recipes.dislike) {
+	    			<input type="hidden" value="@recipe.id" name="recipeId">
+	    			<input id="dislike_recipe" type="submit" value="dislike"></input>
+	    		}
+    		</div>
+    	</div>
+
+    	<!-- Display list of recipes -->
+    	<div class="col-1-2">
+ 	    
+ 	    <div id = "recipe_details">
+ 	    
+ 	    <div class="ingredients-list">
+ 	      <span class="title"><h2>Ingredients</h2></span>
+          <div id="source-ingredients" class="hidden">
+            <ul>
+              @for(ingr <- recipe.getIngredients()){
+              <li><span itemprop="ingredients">@ingr.quantity @ingr.unities of @ingr.name</span></li>
+            }
+            </ul>
+          </div>
+        </div>
+
+        <div id="preparation">
+          <span class="title"><h2>Preparation</h2></span>
+          <p style="display:block;">@Html(recipe.preparation)</p>
+        </div> 	    
+ 	    
+ 	    </div>
+ 	    
+	    </div>
+
+	    @footer()
+    </div>
+}

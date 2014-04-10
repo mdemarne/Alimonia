@@ -1,0 +1,149 @@
+@(createForm : Form[(String, String,Int, List[String], List[String], List[String])])(imgError : String = null)
+
+@main("Alimonia - Create a Recipe"){
+window.onload = function(){
+	
+	/* Bind the add ingredient events */
+	if (document.getElementById("addingredient") != null)
+		document.getElementById("addingredient").addEventListener("click",
+				addingredient());
+
+	/* Bind any existing close buttons */
+	var close_buttons = document.getElementsByClassName("item_close_button");
+	for ( var i = 0; i < close_buttons.length; i++) {
+		close_buttons[i].addEventListener("click",
+				removeingredient(close_buttons[i].parentNode));
+	}
+	
+    @for(i <- createForm.forField("ingr_name"){field  => field.indexes}){
+    
+    	createIngredientDiv("@createForm.forField("ingr_name["+i+"]")(field => field.value.get)",@createForm.forField("ingr_quantity["+i+"]")(field => field.value.get),"@createForm.forField("ingr_units["+i+"]")(field => field.value.get)");
+    	
+    }
+    
+    tinyMCE.init({
+		mode : "textareas",
+		theme : "simple",
+		setup : function(ed) { ed.onPaste.add( function(ed, e, o) {
+              return tinymce.dom.Event.cancel(e);
+            } );
+      }  
+	});
+}
+} {
+
+    @navbar(3)
+    
+@helper.form(action = routes.Recipes.createAct, 'enctype -> "multipart/form-data") {
+    <div class="grid grid-pad">
+  
+    	<div class="col-1-5" style="margin-left:40px;">
+	    	
+			<div id = "image_select"> </div>		
+	    	@if(createForm != null) {
+	          	@createForm.globalError.map { error =>
+	                 <p class="general_error">
+                    	@error.message
+                	</p>
+	            }
+            }
+            @if(imgError != null) {
+             	<p class="general_error">
+                    	@imgError
+                	</p>
+            }
+            
+	    	<div id = "title"> <h4>Recipe Name</h4> </div>
+	    	<div style="margin-left:20px;">
+			@helper.inputText(createForm("name"), '_help -> "", '_label -> None, 'maxlength -> 50)
+	    	</div>
+
+			<div id = "title"> <h4>Recipe Image</h4> </div>			
+			<input type="file" name="image"> 
+
+	
+			<div id = "title"> <h4>Number of People</h4> </div>			
+			@helper.select(field = createForm("nb"), options = Seq("1"->"1", "2"->"2", "4"->"4", "6"->"6"), '_help -> "", '_label -> None)
+			
+    	
+    	</div>
+
+
+    	<div class="col-2-5">
+ 	    	
+	    		<div id = "title" style="text-align:center;"> <h4>Ingredients</h4> </div>
+	    		    	
+	    	
+	    		<div id = "create_recipe_ingredients">
+	    		
+		    		<div id = "labels">
+			    		<div class = "name">Item</div>	
+			    		<div class = "quantity">Quantity</div>
+		    		</div>
+		    		
+		    		<div id = "items">
+
+	    		</div>
+	    		
+	    		<div id = "recipe_forms">
+
+	    			<div id = "insert_item">
+	    				
+	    					<div class = "form_title">Add Item</div>
+
+	    					<p>
+	    						<input id = "insert_item_name" type="text" placeholder="Item Name" size="20" maxlength="40">
+
+	    						<input id = "insert_item_quantity" type="text" placeholder="Quantity" size="9" onkeypress="return doubleOnly(this, event);" maxlength="10">
+
+	    						<select id = "insert_item_units">
+	    							<option value = "units"> units </option>
+	    							<option value = "ml"> ml </option>
+	    							<option value = "l"> l </option>
+	    							<option value = "g"> g </option>
+	    							<option value = "kg"> kg </option>
+	    						</select>
+
+	    						<button id = "addingredient" onclick="return false"> Add Item</button>
+	    					</p>
+	    				
+	    			</div>	    			    			
+	    		</div>
+	    		
+	    	</div>
+	    	
+	    </div>
+
+    	<div class="col-2-5">
+	    	
+	    	<div id = "create_instructions">
+		    	
+		    	<div id = "title" style="text-align:center;"> <h4>Instructions</h4></div>
+
+		    	<div id = "instructions"> 
+			    	
+			    	@helper.textarea(createForm("preparation"), '_help -> "", '_label -> None, 'rows -> 30, 'cols -> 40)
+			    	
+		    	</div>
+		    	
+		    	
+		    	
+	    	</div>
+    
+	    </div>
+	    }
+	    
+	    <div class="col-1-1">
+	    	<div id = "create_submit">
+		    	<input type="submit"></input> 
+		    </div>
+	    </div>
+
+
+	    @footer()
+    </div>
+    
+    
+    
+
+}

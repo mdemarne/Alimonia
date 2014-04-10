@@ -1,0 +1,36 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index
+GET     /fridge			            controllers.Fridges.fridge(category = null)
+GET     /fridge/:category  			controllers.Fridges.fridge(category :String)
+POST	/fridge/search				controllers.Fridges.searchFridge
+POST	/fridge/add/:category		controllers.Fridges.addItemToFridge(category : String)
+POST 	/fridge/removeItem/:category	controllers.Fridges.removeItem(category : String)
+POST 	/fridge/editItem/:category	controllers.Fridges.editItem(category : String)
+
+GET     /recipes                    controllers.Recipes.recipes
+POST 	/recipes/fridgeOnly			controllers.Recipes.searchRecipesFromFridge
+POST 	/recipes/addProduct			controllers.Recipes.addProduct
+GET 	/recipes/removeProduct/:id	controllers.Recipes.removeProduct(id:Int)
+POST	/recipes/withFridge			controllers.Recipes.searchRecipes(withFridge = "yes")
+POST	/recipes/withoutFridge		controllers.Recipes.searchRecipes(withFridge = "no")
+POST	/recipes/ByName				controllers.Recipes.searchRecipesByName
+
+GET     /recipe/:id    			    controllers.Recipes.recipeDetail(id:Int)
+GET     /recipe/shot/:id            controllers.Recipes.recipeShot(id:Int)
+POST	/recipe/like/				controllers.Recipes.like
+POST	/recipe/dislike/			controllers.Recipes.dislike
+POST 	/recipe/cook/:id			controllers.Recipes.cook(id:Int)
+
+GET     /create                     controllers.Recipes.create
+POST    /createAct                  controllers.Recipes.createAct
+
+POST    /login                      controllers.Security.authenticate
+POST    /register                   controllers.Application.register
+GET		/logout						controllers.Security.logout
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)

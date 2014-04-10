@@ -1,0 +1,16 @@
+@(title : String, message : String)
+
+@main(title)(){
+	    <div class="col-1-1">
+	    	<div id = "index_top">
+	    		<div class = "brand">
+		  	  		Alimonia
+		  	  	</div>
+		  	 	<div class="col-2-3">
+		  	 	<p><br/><br/><br/><br/><br/><br/><br/></p>
+		  	 	<h1>@title</h1>
+		  	  	<p align="cente">@message</p>
+		  	  	<p align="center"><a href="@routes.Application.index">Go back to home page</a></p>
+		  	  	</div>
+		  	  	@footer()
+}
