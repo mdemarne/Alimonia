@@ -5,6 +5,9 @@ import play.api.libs.Crypto
 import anorm._
 import anorm.SqlParser._
 import java.util.Date
+
+import scala.language.postfixOps
+
 /**
  * Case class of a product.
  * It contains also some specific methods to one instance of a product.

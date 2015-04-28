@@ -29,7 +29,7 @@ object Shot {
     DB.withConnection { implicit connection =>
       SQL("INSERT INTO " + this.table + " values (NULL, {data}, {recipe})").on(
         'recipe -> shot.recipe,
-        'data -> shot.data).executeUpdate()
+        'data -> shot.data.toString).executeUpdate()
       shot.copy(id = SQL("SELECT MAX(id) as max FROM " + this.table).as(scalar[Int].single))
     }
   }

@@ -70,7 +70,7 @@ object Recipes extends Controller {
         //The data will remain in the cache for 20 minutes only.
         val x = if (request.session.get("nbProducts").isDefined) request.session.get("nbProducts").get.toInt + 1 else 0
         Cache.set("Product_" + request.user.email + "_" + x, TempProduct(args._1, args._2.toDouble, args._3, x), 1200)
-        Redirect(routes.Recipes.recipes).withSession(session + ("nbProducts" -> x.toString()))
+        Redirect(routes.Recipes.recipes)
       })
   }
   /**

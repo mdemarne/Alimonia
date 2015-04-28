@@ -5,12 +5,6 @@ import play.api._
 import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
-import play.libs.Akka
-import akka.util.Duration
-import akka.util.FiniteDuration
-import java.util.concurrent.TimeUnit
-import jobs.PunchforkUpdater
-import jobs.RecipeCleaner
 
 /**
  * This controller handles the welcome page and the actions that doesn't need authentication, such as user creation.

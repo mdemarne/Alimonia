@@ -4,6 +4,8 @@ import play.api.Play.current
 import play.api.libs.Crypto
 import anorm._
 import anorm.SqlParser._
+
+import scala.language.postfixOps
 /**
  * Class of an ingredient.
  * Note that a case class is final to avoid border effects.

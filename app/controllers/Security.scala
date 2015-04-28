@@ -59,7 +59,7 @@ object Security extends Controller {
   def isPositiveDouble(txt : String)(canBeEmpty : Boolean) : Boolean = {
     if (canBeEmpty && txt == "") return true
     try txt.toDouble > 0
-    catch {case _ => false}
+    catch {case _: Throwable => false}
   }
   /**
    * Same thing for the lists.

@@ -6,6 +6,8 @@ import play.api.Play.current
 import anorm._
 import anorm.SqlParser._
 
+import scala.language.postfixOps
+
 /**
  * Case class of a recipe. Contains also some methods specific to one instance of a recipe.
  * Note that a case class is final to avoid border effects.
