@@ -17,3 +17,5 @@ bin/
 .swo
 .swp
 .svn/
+/.target
+/.settings
